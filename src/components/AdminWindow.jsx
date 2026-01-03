@@ -3,15 +3,14 @@ import React from 'react';
 const AdminWindow = ({ onClose, messages, setAllMessages }) => {
   
   const deleteMsg = async (id) => {
-    // 1. Double safety check: Intro messages ko bachane ke liye
     if (id === 1 || id === 2) return;
 
-    // Local state update (UI fast response ke liye)
+   
     const filtered = messages.filter(m => (m.id || m._id) !== id);
     setAllMessages(filtered);
     
     try {
-      // 2. LIVE BACKEND DELETE (Updated URL)
+
       await fetch(`https://portfolio-backend-j4a5.onrender.com/api/messages/${id}`, { 
         method: 'DELETE' 
       });
@@ -41,7 +40,6 @@ const AdminWindow = ({ onClose, messages, setAllMessages }) => {
                   <p className="text-sm text-gray-200 mt-1">{m.text || m.message}</p>
                 </div>
 
-                {/* Fixed Logic: Intro messages par delete nahi dikhega */}
                 {(m.id !== 1 && m.id !== 2) ? (
                   <button 
                     onClick={() => deleteMsg(m.id || m._id)} 

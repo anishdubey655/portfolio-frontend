@@ -13,8 +13,7 @@ const BinWindow = ({ onClose }) => {
             <img src="https://win11.blueedge.me/img/icon/bin0.png" className="w-4 h-4" alt="bin" />
             <span className="text-[11px] font-medium text-gray-300">Recycle Bin</span>
           </div>
-
-          {/* Controls */}
+          
           <div className="flex h-full">
             <div className="w-11 h-full flex items-center justify-center hover:bg-white/5 transition-colors text-lg">−</div>
             <div className="w-11 h-full flex items-center justify-center hover:bg-white/5 transition-colors text-[10px]">⬜</div>
