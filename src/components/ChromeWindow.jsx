@@ -5,7 +5,7 @@ const ChromeWindow = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState(1);
 
   const tabs = [
-    { id: 1, title: "Raktsetu", url:" https://raktsetuin.netlify.app/ "},
+    { id: 1, title: "Raktsetu", url:" https://raktsetu-in.vercel.app/ "},
     { id: 2, title: "Edu2medu", url: "https://www.edu2medu.com/" },
     { id: 3, title: "New Tab", url: "about:blank" }
   ];

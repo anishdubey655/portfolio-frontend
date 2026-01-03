@@ -1,37 +1,41 @@
 import React, { useState } from 'react';
 
-const MessageWindow = ({ onClose }) => {
+const MessageWindow = ({ onClose, messages, onSend }) => {
   const [message, setMessage] = useState(''); 
   const [loading, setLoading] = useState(false);
-
-  const [chatMessages, setChatMessages] = useState([
-    { id: 1, text: "Hey there! 👋 I'm Anish.", sender: 'anish' },
-    { id: 2, text: "Drop a message here, it will sync to my Admin Panel. I'll get back to you soon!", sender: 'anish' }
-  ]);
 
   const handleSendMessage = async () => {
     if (!message.trim()) return;
 
-    const newUserMessage = {
-      id: Date.now(),
-      text: message,
-      sender: 'user' 
-    };
-    
-    setChatMessages(prev => [...prev, newUserMessage]);
     const currentMsg = message; 
+    
+    // 1. App.js ki state update karega (UI Syncing)
+    onSend(currentMsg); 
+    
     setMessage(''); 
-
     setLoading(true);
+
     try {
-      await fetch('http://localhost:5000/api/contact', {
+      // 2. LIVE BACKEND API CALL (Updated URL)
+      const response = await fetch('https://portfolio-backend-j4a5.onrender.com/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: currentMsg }),
+        body: JSON.stringify({ 
+          name: "User", // Backend validation ke liye
+          email: "user@portfolio.com", 
+          message: currentMsg 
+        }),
       });
 
+      if (!response.ok) {
+        throw new Error("Server response failed");
+      }
+      
+      console.log("Message sent to Render backend!");
     } catch (error) {
       console.error("Backend Error:", error);
+      // Agar backend down ho toh alert dikhayega
+      alert("Backend server respond nahi kar raha, par messages local sync ho gaye hain!");
     } finally {
       setLoading(false);
     }
@@ -43,7 +47,7 @@ const MessageWindow = ({ onClose }) => {
 
       <div className="relative w-full max-w-[850px] h-[580px] bg-[#1c1c1c] rounded-lg shadow-2xl flex flex-col overflow-hidden border border-white/10 text-white">
         
-
+        {/* Title Bar */}
         <div className="h-10 bg-[#202020] flex items-center justify-between pl-3 select-none border-b border-white/5">
           <div className="flex items-center gap-2">
             <img src="message.webp" className="w-4 h-4 invert opacity-80" alt="icon" />
@@ -57,7 +61,7 @@ const MessageWindow = ({ onClose }) => {
         </div>
 
         <div className="flex-1 flex overflow-hidden">
-
+          {/* Sidebar */}
           <div className="w-[300px] bg-[#252525] border-r border-white/5 flex flex-col">
             <div className="p-5">
               <h2 className="text-xl font-bold mb-4 tracking-tight">Messages</h2>
@@ -74,20 +78,19 @@ const MessageWindow = ({ onClose }) => {
             </div>
           </div>
 
-
+          {/* Chat Area */}
           <div className="flex-1 flex flex-col bg-[#1e1e1e]">
-
             <div className="flex-1 p-6 flex flex-col gap-4 overflow-y-auto">
-              {chatMessages.map((msg) => (
+              {messages.map((msg) => (
                 <div 
                   key={msg.id} 
-                  className={`${msg.sender === 'user' ? 'self-end' : 'self-start'} max-w-[85%]`}
+                  className={`${msg.sender === 'User' ? 'self-end' : 'self-start'} max-w-[85%]`}
                 >
-                  {msg.sender === 'anish' && (
+                  {msg.sender !== 'User' && (
                     <p className="text-[10px] text-gray-500 ml-3 mb-1 font-bold uppercase">Anish Dubey</p>
                   )}
                   <div className={`p-3 rounded-2xl shadow-md text-[13px] leading-relaxed border border-white/5 ${
-                    msg.sender === 'user' 
+                    msg.sender === 'User' 
                     ? 'bg-blue-600 text-white rounded-tr-none' 
                     : 'bg-[#2d2d2d] text-gray-200 rounded-tl-none'
                   }`}>
@@ -97,6 +100,7 @@ const MessageWindow = ({ onClose }) => {
               ))}
             </div>
 
+            {/* Input Area */}
             <div className="p-4 bg-[#202020]/50 border-t border-white/5">
               <div className="flex items-center gap-3 bg-[#2d2d2d] rounded-full px-5 py-3 border border-white/10 focus-within:border-blue-500/50 transition-all">
                 <input 
