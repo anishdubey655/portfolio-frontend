@@ -58,7 +58,7 @@ function App() {
           
           <div className="flex-1 p-6 flex flex-col gap-6 items-start">
             <div onClick={() => setIsTerminalOpen(true)}>
-              <DesktopIcon name="Who Am I" iconImg="/whoami.png" />
+              <DesktopIcon name="Who Am I" iconImg="/whoAmI.png" />
             </div>
             <div onClick={openResume}>
               <DesktopIcon name="resume.pdf" iconImg="/pdf.webp" />
