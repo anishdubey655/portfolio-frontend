@@ -28,7 +28,7 @@ function App() {
   };
 
   const openResume = () => {
-    window.open("/resume.pdf", "_blank");
+    window.open("resume..pdf", "_blank");
   };
 
   return (
